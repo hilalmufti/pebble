@@ -1,4 +1,4 @@
-![alt text](https://github.com/hilalmufti/pebble/blob/main/pebble.jpeg)
+<img src="https://github.com/hilalmufti/pebble/blob/main/pebble.jpeg" width="75%" alt="banner">
 
 # pebble
 
