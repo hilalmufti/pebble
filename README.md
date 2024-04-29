@@ -1,4 +1,6 @@
-<img src="https://github.com/hilalmufti/pebble/blob/main/pebble.jpeg" width="75%" alt="banner">
+<div align="center">
+  <img src="https://github.com/hilalmufti/pebble/blob/main/pebble.jpeg" width="60%" alt="Pebble Project Image">
+</div>
 
 # pebble
 
