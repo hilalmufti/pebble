@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://github.com/hilalmufti/pebble/blob/main/pebble.jpeg" width="100%" alt="Pebble Project Image">
+  <img src="https://github.com/hilalmufti/pebble/blob/main/pebble.jpeg" width="90%" alt="Pebble Project Image">
 </div>
 
 # pebble
