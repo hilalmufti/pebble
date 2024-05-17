@@ -1,0 +1,119 @@
+
+```
+                                                             _---~~(~~-_.
+                                                     +------{        )   )
+   ._________________.                               |   ,   ) -~~- ( ,-' )_
+   |.---------------.|<------------------------------+  (  `-,_..`., )-- '_,)
+   ||               ||  _ __   ___ _   _ _ __ __ _| |  ( ` _)  (  -~( -_ `,  }
+   ||   -._ .-.     || | '_ \ / _ \ | | | '__/ _` | |  (_-  _  ~_-~~~~`,  ,' )
+   ||   -._| | |    || | | | |  __/ |_| | | | (_| | |    `~ -^(    __;-,((()))
+   ||   -._|"|"|    || |_| |_|\___|\__,_|_|  \__,_|_|          ~~~~ {_ -_(())---+
+   ||   -._|.-.|    ||                                                `\  }     |
+   ||_______________||                                                  { }     |
+   /.-.-.-.-.-.-.-.-.\      __   _____ _ __(_)/__(_) ___ __ _|_|_(_) ___  _ __  |
+  /.-.-.-.-.-.-.-.-.-.\     \ \ / / _ \ '__| | |_| |/ __/ _` | __| |/ _ \| '_ \ |
+ /.-.-.-.-.-.-.-.-.-.-.\     \ V /  __/ |  | |  _| | (_| (_| | |_| | (_) | | | ||
+/______/__________\___o_\     \_/ \___|_|  |_|_| |_|\___\__,_|\__|_|\___/|_| |_||
+\_______________________/<------------------------------------------------------+
+```
+
+## Summary and State
+
+This is the repository for the preprint "Opening the AI black box: program synthesis via mechanistic interpretability" (https://arxiv.org/abs/2402.05110). Some parts of our pipeline haven't been added yet to the repository. If you'd like to get these asap, please email me at `ericjm` [at] `mit.edu`. 
+
+In this repository currently are the parts of the pipeline needed to create datasets for our tasks and then perform an architecture search on each task to find the smallest RNN capable of solving each one.
+
+## Creating task datasets
+
+Inside the `tasks` directory are a variety of folders each containing a `create_dataset.py` script. To create the dataset for a task, you can just run this script in the corresponding folder. This will create a `data.pt` file in the task's folder with 1e6 sample sequences, split in to train and test sets.
+
+## Installing the neural-verification module
+We define several helpful objects (the RNN model, data loaders, etc.) inside of the `neural-verification` module, which you can install with:
+```
+pip install -e neural_verification
+```
+This requires PyTorch.
+
+<<<<<<< HEAD
+## Training RNNs (architecture search)
+
+To perform an architecture search across a set of tasks, one can run the `scripts/rnn_architecture_search.py` script like so:
+```
+python scripts/rnn_architecture_search.py --config first_paper_final.yaml --tasks_dir tasks/ --architecture_search_script scripts/rnn_architecture_search.py --save_dir arch_search
+```
+
+The `--config` argument specifies a yaml file containing the args to pass to the `rnn_architecture_search.py` script for each task. It will run the architecture search on each task with a separate slurm job.
+
+
+## Hammering RNNs
+TODO
+
+## Extraction of variables with integer autoencoder
+TODO
+
+## Symbolic regression
+TODO
+
+## Comparison to GPT-4
+TODO
+
+## A note on naming conventions
+We changed the names of the tasks for the paper, and we still need to rename the tasks in this repository to reflect that.
+
+=======
+## Running architecture search
+You can perform an architecture search on a task by running the `scripts/rnn_architecture_search.py` script. For example, to run an architecture search on the `rnn_prev2_numerical` task, you could run something like:
+```
+python scripts/rnn_architecture_search.py --data tasks/rnn_prev2_numerical/data.pt --loss_fn "log" --input_dim 1 --output_dim 1 --seeds-per-run 3 --save_dir tasks/rnn_prev2_numerical/arch --steps 5000
+```
+There are many choices involved in running this script. Inside `scripts/rnn_architecture_search.py`, we run `scripts/rnn_train.py` with many different arguments, so you could take a look at that script to see what arguments are available. The most important arguments are the `--loss_fn` argument for choosing between "mse", "log", and "cross_entropy". The "log" option is the 0.5*log(1+x^2) loss function. There is also a flag `--vectorize_input` which will turn ints into
+one-hot vectors before passing them to the network. This shouldn't be used for "numerical" tasks where the input is a 1d
+vector, but is useful for tasks where the input is categorical -- for instance, if inputs are letters, you may
+want the inputs to be one-hot vectors of length 26. You'll also have to choose the `--input_dim` and `--output_dim` arguments
+to match the task. For instance, in the example I just gave where the input is a one-hot vector of length 26, you would
+set `--input_dim 26`. The `--seeds-per-run` argument controls how many different seeds to use for each architecture. The
+`--steps` argument controls how many steps to train for.
+
+With this script, you just need to create a dataset of input and output tensors. The script should be flexible enough
+to handle the input sequences which are just a 1d list of real numbers, but can also handle input sequences that are
+a list of higher-dimensional vectors. 
+
+## Running the GPT Baseline
+
+### Set-Up
+To run the GPT baseline on your dataset, you will first need to input your OpenAI token into `/gpt4/prompt.py`. Enter your API key here:
+
+```python
+api_key = "your-key-here"
+```
+
+#### Running the baseline for a single task
+
+To run the baseline for a single task, use the following command:
+
+```sh
+python prompt.py --task <task_name> --iterations <number_of_iterations>
+```
+
+Replace `<task_name>` with one of the tasks listed in `/tasks/`. The `<number_of_iterations>` parameter repeats the run for a fixed number, increasing the chance of successfully discovering an algorithm. The default value for iterations is 3.
+
+#### Running the baseline for all tasks
+
+To automatically prompt GPT for all tasks listed at the start of the file in `/gpt4/prompt_all.py`, use the following command:
+
+```sh
+python prompt_all.py --iterations <number_of_iterations>
+```
+
+Here, `<number_of_iterations>` specifies how many times each task should be repeated.
+
+#### Extracting results and creating a table
+
+To extract the results and generate a `tasks_results.csv` table, run the following command:
+
+```sh
+python run_extracted_code.py
+```
+
+This command will save all the results in the `task_results.csv` file.
+>>>>>>> gpt
