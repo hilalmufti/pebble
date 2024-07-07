@@ -78,6 +78,7 @@ import time
 import random
 import argparse
 import yaml
+from functools import reduce
 
 import numpy as np
 import pandas as pd
@@ -86,6 +87,21 @@ import torch
 import torch.nn.functional as F
 
 from rnn_train import train
+
+from pyrsistent import m, v, pmap, pvector
+
+
+def conj(dct=None, k=None, v=None):
+    match dct, k, v:
+        case None, None, None:
+            return v()
+        case xs, None, None:
+            return xs
+        case xs, x, None:
+            return xs.append(x)
+        case xs, k, v:
+            return dct.set(k, v)
+        
 
 def range_product(ranges):
     """
@@ -150,6 +166,40 @@ GREEN = "\033[92m"
 RED = "\033[91m"
 DEFAULT = "\033[0m"
 GREY = "\033[90m"
+
+def make_args(**kwargs):
+    args = pmap({
+        'data': kwargs['data'],
+        'loss_fn': 'mse',
+        'input_dim': 1,
+        'output_dim': 128,
+        'max_hidden_dim': 128,
+        'max_hidden_mlp_depth': 3,
+        'max_hidden_mlp_width': 256,
+        'max_output_mlp_depth': 3,
+        'max_output_mlp_width': 256,
+        'activation': 'ReLU',
+        'steps': 10000,
+        'lr': 1e-3,
+        'weight_decay': 0.0,
+        'train_batch_size': 4096,
+        'test_batch_size': 65536,
+        'ignore_first_n_elements': 0,
+        'dtype': 'float32',
+        'seeds_per_run': 3,
+        'save_dir': '0',
+    })
+    if kwargs.get('vectorize_input', False):
+        args = conj('vectorize_input', True)
+    return args
+
+def make_one_tuples(*xs):
+    return pvector(reduce(lambda acc, x: conj(acc, (1, x)), xs, v()))
+
+def compute_N(a, b, c, d, e):
+    return range_product(make_one_tuples(a, b, c, d, e))
+
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Performs architecture search over GeneralRNN shape")
