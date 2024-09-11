@@ -1,0 +1,26 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Run",
+            "type": "shell",
+            "command": "uv run -- python -m pebble.main",
+            "problemMatcher": [],
+            "group": "none"
+        },
+        {
+            "label": "Test",
+            "type": "shell",
+            "command": "uv run pytest",
+            "problemMatcher": [],
+            "group": "none"
+        },
+        {
+            "label": "Expect test",
+            "type": "shell",
+            "command": "EXPECTTEST_ACCEPT=1 uv run pytest",
+            "problemMatcher": [],
+            "group": "none"
+        }
+    ]
+}
