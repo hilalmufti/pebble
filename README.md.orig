@@ -34,33 +34,6 @@ pip install -e neural_verification
 ```
 This requires PyTorch.
 
-<<<<<<< HEAD
-## Training RNNs (architecture search)
-
-To perform an architecture search across a set of tasks, one can run the `scripts/rnn_architecture_search.py` script like so:
-```
-python scripts/rnn_architecture_search.py --config first_paper_final.yaml --tasks_dir tasks/ --architecture_search_script scripts/rnn_architecture_search.py --save_dir arch_search
-```
-
-The `--config` argument specifies a yaml file containing the args to pass to the `rnn_architecture_search.py` script for each task. It will run the architecture search on each task with a separate slurm job.
-
-
-## Hammering RNNs
-TODO
-
-## Extraction of variables with integer autoencoder
-TODO
-
-## Symbolic regression
-TODO
-
-## Comparison to GPT-4
-TODO
-
-## A note on naming conventions
-We changed the names of the tasks for the paper, and we still need to rename the tasks in this repository to reflect that.
-
-=======
 ## Running architecture search
 You can perform an architecture search on a task by running the `scripts/rnn_architecture_search.py` script. For example, to run an architecture search on the `rnn_prev2_numerical` task, you could run something like:
 ```
@@ -116,4 +89,3 @@ python run_extracted_code.py
 ```
 
 This command will save all the results in the `task_results.csv` file.
->>>>>>> gpt
