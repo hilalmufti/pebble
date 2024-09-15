@@ -9,3 +9,4 @@ import pebble.scripts.rnn_architecture_search as ras
 
 def test_range_product():
     assert_expected_inline(ras.range_product([0, 2], [1, 3]), """""")
+    assert_expected_inline(ras.range_product([0, 2], [1, 3], [4, 5]), """""")
