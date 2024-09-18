@@ -271,7 +271,7 @@ if __name__ == "__main__":
             prev_n = n
             n = int(n * (2**0.25))
             continue
-        seeds = list(range(args.seeds_per_run))
+        seeds = range(args.seeds_per_run)
         args_run = argparse.Namespace(**vars(args).copy())
         (
             args_run.output_mlp_depth,
@@ -296,7 +296,7 @@ if __name__ == "__main__":
             run_dir = os.path.join(args.save_dir, "runs", f"{n}_{seed}")
             args_run.save_dir = run_dir
             train(args_run)
-            metrics = torch.load(os.path.join(run_dir, "metrics.pt"))
+            metrics = torch.load(os.path.join(run_dir, "metrics.pt"), weights_only=True)
             if max(metrics["test_accuracies"]) == 1.0:
                 success_n = n
                 success_seed = seed
@@ -330,7 +330,7 @@ if __name__ == "__main__":
     failed_n = n // 2
     while success_n - failed_n > 1:
         n = (success_n + failed_n) // 2
-        seeds = list(range(args.seeds_per_run))
+        seeds = range(args.seeds_per_run)
         args_run = argparse.Namespace(**vars(args).copy())
         (
             args_run.output_mlp_depth,
@@ -368,7 +368,7 @@ if __name__ == "__main__":
             run_dir = os.path.join(args.save_dir, "runs", f"{n}_{seed}")
             args_run.save_dir = run_dir
             train(args_run)
-            metrics = torch.load(os.path.join(run_dir, "metrics.pt"))
+            metrics = torch.load(os.path.join(run_dir, "metrics.pt"), weights_only=True)
             if max(metrics["test_accuracies"]) == 1.0:
                 success_n = n
                 success_seed = seed

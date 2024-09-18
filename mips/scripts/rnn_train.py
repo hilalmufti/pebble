@@ -105,7 +105,7 @@ def train(args):
     )
     model = GeneralRNN(model_config, device=device)
 
-    sequences = [seqs.to(device) for seqs in torch.load(args.data)]
+    sequences = [seqs.to(device) for seqs in torch.load(args.data, weights_only=True)]
     sequences_x_train, \
     sequences_y_train, \
     sequences_x_test, \
