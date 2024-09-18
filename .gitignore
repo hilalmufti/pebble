@@ -238,3 +238,6 @@ pyrightconfig.json
 *.err
 *.out
 *.log
+*.bak
+
+0/

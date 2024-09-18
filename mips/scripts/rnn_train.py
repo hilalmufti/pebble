@@ -32,7 +32,7 @@ from tqdm.auto import tqdm
 import torch
 import torch.nn.functional as F
 
-from neural_verification import (
+from mips.neural_verification import (
     GeneralRNNConfig,
     GeneralRNN,
     cycle,

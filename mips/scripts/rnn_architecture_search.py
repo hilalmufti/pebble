@@ -77,15 +77,18 @@ import time
 import random
 import argparse
 import yaml
-from typing import Iterable
+from itertools import starmap as smap
+import operator as op
+from functools import reduce
+from collections.abc import Iterable, Reversible
 
-import numpy as npq
+import numpy as np
 import pandas as pd
 from tqdm.auto import tqdm
 import torch
 import torch.nn.functional as F
 
-from rnn_train import train
+from .rnn_train import train
 
 
 def range_product(ranges: Iterable[tuple[int, int]]) -> int:
@@ -93,13 +96,10 @@ def range_product(ranges: Iterable[tuple[int, int]]) -> int:
     Compute the product of the ranges.
     ranges: A list of ranges for each parameter.
     """
-    result = 1
-    for r in ranges:
-        result *= r[1] - r[0] + 1
-    return result
+    return reduce(op.mul, smap(lambda start, end: end - start + 1, ranges), 1)
 
 
-def tuple_to_int(t, ranges):
+def tuple_to_int(t: Reversible, ranges: Reversible):
     """
     Map a tuple to an integer.
     t: The tuple representing the parameters.
@@ -160,7 +160,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Performs architecture search over GeneralRNN shape"
     )
-    parser.add_argument("--data", type=str, help="Path to dataset, a .pt file")
+    parser.add_argument(
+        "--data", type=str, default=None, help="Path to dataset, a .pt file"
+    )
     parser.add_argument(
         "--loss_fn",
         type=str,
@@ -244,7 +246,7 @@ if __name__ == "__main__":
     N = range_product(ranges)
     print(f"log2( architecture search space ) = {np.log2(N)}")
 
-    # initiial architecture
+    # initial architecture
     nwo = range_output_mlp_width[1] - range_output_mlp_width[0] + 1
     nwh = range_hidden_mlp_width[1] - range_hidden_mlp_width[0] + 1
     # with our ordering of the parameters, the first nwo * nwh
